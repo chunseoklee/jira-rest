@@ -93,6 +93,8 @@ see URL https://developer.atlassian.com/display/JIRADEV/JIRA+REST+API+Example+-+
 
 (defvar jira-rest-mode-map nil)
 
+(defvar jira-rest-endpoint-suffix "rest/api/2/")
+
 (if jira-rest-mode-map
     nil
   (progn
@@ -176,7 +178,8 @@ down the URL structure to send the request."
     (if (not (equal method "DELETE"))
         (let ((data (buffer-substring (search-forward-regexp "^$")
                                       (point-max))))
-          (setq response (json-read-from-string data))))
+	  (setq response (json-read-from-string data))
+	  ))
     (kill-buffer (current-buffer))))
 
 (defun jira-rest-mode-quit ()
@@ -232,7 +235,7 @@ issueId or key."
 (defun jira-rest-get-watchers (k)
   "Get all the watchers for an issue."
   (interactive (list (read-string "Issue Key or ID: ")))
-  (jira-rest-api-interact "GET" nil (concat k "/watchers")))
+  (jira-rest-api-interact "GET" nil (concat jira-rest-endpoint-suffix "issue/" k "/watchers")))
 
 (defun jira-rest-add-watcher (k name)
   "Add a watcher to an issue."
